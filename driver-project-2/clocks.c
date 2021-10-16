@@ -1,6 +1,12 @@
-#include "xc.h"
-#include "ChangeClk.h"
+/*
+ * File: clocks.c
+ * Author: Cheyenne Goh, Faisal Hossain, Andrine Buiza
+ *
+ * Submitted on October 17, 2021
+ */
 
+#include "xc.h"
+#include "gpio.h"
 
 //clkval = 8 for 8MHz; 
 //clkval = 500 for 500kHz; 
