@@ -30,47 +30,67 @@
 #define Idle() {__asm__ volatile ("pwrsav #1");}    //Idle() - put MCU in idle mode - only CPU off
 #define dsen() {__asm__ volatile ("BSET DSCON, #15");} //
 
-uint16_t delay = 1;
+uint16_t delay = 5000;
 uint16_t state1 = 0;
 uint16_t state2 = 0;
+uint16_t turnoff = 1;
+uint16_t turnon = 0;
+//uint16_t interupt = 1;
 
 void __attribute__((interrupt, no_auto_psv))_CNInterrupt(void){
     if(IFS1bits.CNIF == 1){
-        if ((PORTAbits.RA2 + PORTAbits.RA4 + PORTBbits.RB4) < 2) {
-            delay = 1;
-            state1 = 1;
-            state2 = 1;
-        }
-        else if (PORTAbits.RA2 == 0) {
-            delay = 1000;
-            state1 = 1;
-            state2 = 0;
-        }
-        else if (PORTBbits.RB4 == 0) {
-            delay = 2000;
-            state1 = 1;
-            state2 = 0;            
-        }
-        else if (PORTAbits.RA4 == 0) {
-            delay = 3000;
-            state1 = 1;
-            state2 = 0;
-        }
-        else {
-            delay = 1;
-            state1 = 0;
-            state2 = 0;
-        }
         IFS0bits.T2IF = 0; // Clear timer 2 interrupt flag
         T2CONbits.TON = 0; // stop timer
         TMR2 = 0;
+        turnoff = 0;
+        turnon = 0;
+//        interupt = 1;
+        if ((PORTAbits.RA2 + PORTAbits.RA4 + PORTBbits.RB4) < 2) {
+            delay = 1;
+            turnon = 1;
+        }
+        else if (PORTAbits.RA2 == 0) {
+//            LATBbits.LATB8 = 1;
+            delay = 1000;
+//            state1 = 1;
+//            state2 = 0;
+        }
+        else if (PORTBbits.RB4 == 0) {
+//            LATBbits.LATB8 = 1;
+            delay = 2000;
+//            state1 = 1;
+//            state2 = 0;            
+        }
+        else if (PORTAbits.RA4 == 0) {
+//            LATBbits.LATB8 = 1;
+            delay = 3000;
+//            state1 = 1;
+//            state2 = 0;
+        }
+        else {
+            delay = 5000;
+            turnoff = 1;
+            LATBbits.LATB8 = 0;
+//            state1 = 0;
+//            state2 = 0;
+        }
     }
+    
     IFS1bits.CNIF = 0;
 }
 
 void __attribute__((interrupt, no_auto_psv))_T2Interrupt(void) {
     IFS0bits.T2IF = 0; // Clear timer 2 interrupt flag
     T2CONbits.TON = 0; // stop timer
+    if(turnon == 1){
+        LATBbits.LATB8 = 1;
+    }
+    else if(turnoff == 1){
+        LATBbits.LATB8 = 0;
+    }
+    else{
+        LATBbits.LATB8 = !PORTBbits.RB8;
+    }
     // TMR2flag = 1; // global variable created by user
 }
 
@@ -132,10 +152,10 @@ void main(void) {
     
     while(1)
     {
-        LATBbits.LATB8 = state1;
+//        LATBbits.LATB8 = state1;
         Delay_ms(delay);
-        LATBbits.LATB8 = state2;
-        Delay_ms(delay);
+//        LATBbits.LATB8 = state2;
+//        Delay_ms(delay);
     }
     
     
