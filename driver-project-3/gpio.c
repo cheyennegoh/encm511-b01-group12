@@ -26,39 +26,51 @@ void IOcheck(){
     TMR2 = 0; // Sets TMR2 to 0
     turnoff = 0; // Clear turnoff flag
     turnon = 0; // Clear turnon flag
-    blink = 1;
+    blink = 1; // Set blink flag
+    three = 0; // Clear three flag
+    two = 0; // Clear two flag
+    nothing_pressed = 0; // Clear nothing_pressed flag
     if ((PORTAbits.RA2 + PORTAbits.RA4 + PORTBbits.RB4) < 2) {
         // checks if two or more buttons are pressed
+        if((PORTAbits.RA2 + PORTAbits.RA4 + PORTBbits.RB4) == 0){
+            three = 1; // Set three flag to 1
+        }
+        else{
+            two = 1; // Set two flag to 1
+            if(PORTAbits.RA2 == 1){
+                pb = '2'; // Assign pb char to '2'
+                pb2 = '3'; // Assign pb2 char to '3'
+            }
+            else if(PORTBbits.RB4 == 1){
+                pb = '1'; // Assign pb char to '1'
+                pb2 = '3'; // Assign pb2 char to '3'
+            }
+            else{
+                pb = '1'; // Assign pb char to '1'
+                pb2 = '2'; // Assign pb2 char to '2'
+            }
+        }
+        blink = 0; // Set blink to 0
         delay = 1; // Set delay to 1
         turnon = 1; // turnon flag
     }
     else if (PORTAbits.RA2 == 0) {
-        delay = 500; // Set delay  to 1 seconds
-        pb = '1';
-//        NewClk(8);
-//        Disp2String("\n\r PB1 is pressed");
-//        NewClk(32);
+        delay = 500; // Set delay  to 0.5 seconds
+        pb = '1'; // Assign pb char to '1'
     }
     else if (PORTBbits.RB4 == 0) {
         delay = 2000; // Set delay to 2 seconds
-        pb = '2';
-//        NewClk(8);
-//        Disp2String("\n\r PB2 is pressed");
-//        NewClk(32);
+        pb = '2'; // Assign pb char to '2'
     }
     else if (PORTAbits.RA4 == 0) {
         delay = 3000; // Set delay to 3 second
-        pb = '3';
-//        NewClk(8);
-//        Disp2String("\n\r PB3 is pressed");
-//        NewClk(32);
+        pb = '3'; // Assign pb char to '3'
     }
     else {
-        delay = 5000; // Reset delay
+        delay = 1; // Reset delay
         turnoff = 1; // Set turnoff flag
         LATBbits.LATB8 = 0; // turnoff LED
-//        NewClk(8);
-//        Disp2String("\n\r Nothing pressed");
-//        NewClk(32);
+        nothing_pressed = 1; // Set nothing pressed to 1
+        blink = 0; // Set blink to 0
     }
 }

@@ -20,8 +20,9 @@ extern "C" {
 #endif
 
 extern uint16_t turnon, turnoff, delay;
-extern char pb;
-extern int blink;
+extern char pb, pb2;
+extern int blink, three, two, nothing_pressed;
+extern int buttons[3];
 
 void IOinit();
 // PROMISES: initializes the IO ports and placed
