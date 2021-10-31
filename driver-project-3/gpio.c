@@ -41,7 +41,7 @@ void IOcheck(){
                 pb = '2'; // Assign pb char to '2'
                 pb2 = '3'; // Assign pb2 char to '3'
             }
-            else if(PORTBbits.RB4 == 1){
+            else if(PORTAbits.RA4 == 1){
                 pb = '1'; // Assign pb char to '1'
                 pb2 = '3'; // Assign pb2 char to '3'
             }
@@ -58,11 +58,11 @@ void IOcheck(){
         delay = 500; // Set delay  to 0.5 seconds
         pb = '1'; // Assign pb char to '1'
     }
-    else if (PORTBbits.RB4 == 0) {
+    else if (PORTAbits.RA4 == 0) {
         delay = 2000; // Set delay to 2 seconds
         pb = '2'; // Assign pb char to '2'
     }
-    else if (PORTAbits.RA4 == 0) {
+    else if (PORTBbits.RB4 == 0) {
         delay = 3000; // Set delay to 3 second
         pb = '3'; // Assign pb char to '3'
     }
