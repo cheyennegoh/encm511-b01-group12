@@ -41,6 +41,7 @@ int blink; // Initializes blink variable
 int three; // Initializes three variable
 int two; // Initializes two variable
 int nothing_pressed; // Initializes nothing_pressed variable
+int _delay;
 char pb; // Initializes pb variable
 char pb2; // Initializes pb2 variable
 
