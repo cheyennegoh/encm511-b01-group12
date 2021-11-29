@@ -19,7 +19,7 @@ extern "C" {
 }
 #endif
 
-extern int ADC_flag, minutes, seconds, inc_min_flag, inc_sec_flag, countdown, pb_3, is_paused;
+extern int minutes, seconds, inc_min_flag, inc_sec_flag, countdown, is_paused;
 
 void IOinit();
 // PROMISES: initializes the IO ports

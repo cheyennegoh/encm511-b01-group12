@@ -33,13 +33,11 @@
 #define dsen() {__asm__ volatile ("BSET DSCON, #15");}
 
 // Global variables
-int ADC_flag; // Initializes ADC_flag
 int minutes = 0; // Initializes minutes
 int seconds = 0; // Initializes seconds
 int inc_min_flag = 0; // Initializes inc_min_flag
 int inc_sec_flag = 0; // Initializes inc_sec_flag
 int countdown = 0; // Initializes countdown
-int pb_3 = 0; // Initializes pb_3
 int is_paused = 0; // Initializes is_paused
 int alarm = 0; // Initializes alarm
 
@@ -47,12 +45,12 @@ void __attribute__((interrupt, no_auto_psv))_CNInterrupt(void){
     if(IFS1bits.CNIF == 1){
         IOcheck(); // Calls IOcheck() function
     }
-    IFS1bits.CNIF = 0; // Clear CN interrupt flag status
+    IFS1bits.CNIF = 0; // Clears CN interrupt flag status
 }
 
 void __attribute__((interrupt, no_auto_psv))_T2Interrupt(void) {
-    IFS0bits.T2IF = 0; // Clear timer 2 interrupt flag
-    T2CONbits.TON = 0; // stop timer
+    IFS0bits.T2IF = 0; // Clears timer 2 interrupt flag
+    T2CONbits.TON = 0; // Stops timer
     if(is_paused && (PORTBbits.RB4 == 0)){
         LATBbits.LATB8 = 0; // Sets RB8 to lo
         minutes = 0; // Resets minutes
@@ -73,73 +71,74 @@ void main(void) {
     while(1){
         alarm = 0; // Resets alarm
         NewClk(8); // Changes clock to 8 MHz
-        Disp2String("         "); // Erases alarm message
-        Disp2String("\r"); 
-        Disp2Dec(minutes);
-        XmitUART2('m', 1);
-        XmitUART2(' ', 1);
-        XmitUART2(':', 1);
-        Disp2Dec(seconds);
-        XmitUART2('s', 1);
-        Delay_ms(200);
-        if(countdown){
-            if(seconds == 0){
-                if(minutes == 0){
-                    countdown = 0;
-                    NewClk(8);
-                    Disp2String("\r");
-                    Disp2Dec(minutes);
-                    XmitUART2('m', 1);
-                    XmitUART2(' ', 1);
-                    XmitUART2(':', 1);
-                    Disp2Dec(seconds);
-                    XmitUART2('s', 1);
+        Disp2String("         "); // Clears alarm message
+        Disp2String("\r"); // Displays carriage return
+        Disp2Dec(minutes); // Displays minutes
+        XmitUART2('m', 1); // Displays m
+        XmitUART2(' ', 1); // Displays space
+        XmitUART2(':', 1); // Displays :
+        Disp2Dec(seconds); // Displays seconds
+        XmitUART2('s', 1); // Displays s
+        Delay_ms(200); // Delays for 200 ms
+        if(countdown) {
+            if(seconds == 0) {
+                if(minutes == 0) {
+                    countdown = 0; // Resets countdown
+                    NewClk(8); // Changes clock to 8 MHz
+                    Disp2String("\r"); // Displays carriage return
+                    Disp2Dec(minutes); // Displays minutes
+                    XmitUART2('m', 1); // Displays m
+                    XmitUART2(' ', 1); // Displays space
+                    XmitUART2(':', 1); // Displays :
+                    Disp2Dec(seconds); // Displays seconds
+                    XmitUART2('s', 1); // Displays s
                     Disp2String(" -- ALARM"); // Displays alarm message
-                    LATBbits.LATB8 = 1;
-                    Idle();
+                    LATBbits.LATB8 = 1; // Sets RB8 to hi
+                    Idle(); // Returns to idle
                 }
-                else{
-                    minutes--;
-                    seconds = 59;
+                else {
+                    minutes--; // Decrements minutes
+                    seconds = 59; // Sets seconds to 59
                 }
             }
-            else{
-                seconds--;
+            else {
+                seconds--; // Decrements seconds
             }
-            if(is_paused){
-                LATBbits.LATB8 = 0;
+            if(is_paused) {
+                LATBbits.LATB8 = 0; // Sets RB8 to lo
             }
-            else{
-                LATBbits.LATB8 = !PORTBbits.RB8;
-                if(!is_paused){
-                    Delay_ms(1000);
+            else {
+                LATBbits.LATB8 = !PORTBbits.RB8; // Toggles RB8 value
+                if(!is_paused) {
+                    Delay_ms(1000); // Delays for 1000 ms
                 }
-                pb_3++;
             }
             
         }
-        if(inc_min_flag){
-            LATBbits.LATB8 = 0;
+        if(inc_min_flag) {
+            LATBbits.LATB8 = 0; // Sets RB8 to lo
             if(minutes == 59){
-                minutes = 0;
+                minutes = 0; // Resets minutes
             }
             else{
-                minutes++;
+                minutes++; // Increments minutes
             }
-            Delay_ms(200);
+            Delay_ms(200); // Delays for 200 ms
         }
-        if(inc_sec_flag){
-            LATBbits.LATB8 = 0;
+        if(inc_sec_flag) {
+            LATBbits.LATB8 = 0; // Sets RB8 to lo
             if(seconds == 59){
-                seconds = 0;
+                seconds = 0; // Resets seconds
             }
             else{
-                seconds++;
+                seconds++; // Increments seconds
             }
-            Delay_ms(200);
+            Delay_ms(200); // Delays for 200 ms
         }
-        if(is_paused) Delay_ms(3000);
+        if(is_paused) {
+            Delay_ms(3000); // Delays for 3000 ms
+        }
     }
     
-    return; // returns main() function
+    return; // Returns main() function
 } 
