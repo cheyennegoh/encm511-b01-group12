@@ -34,6 +34,7 @@ void ADCinit(void) {
     
     // IO port selection
     TRISAbits.TRISA3 = 1; // Set pin8/RA3/AN5 as input
+    TRISBbits.TRISB13 = 1;
     AD1PCFG = 0xFFFF; // Set all bits as digital
     AD1PCFGbits.PCFG5 = 0; // Set only pin8/AN5/RA3 as analog input for ADC
     AD1CSSL = 0; // Input scan disabled, 0x0000 is default state
