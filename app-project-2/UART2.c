@@ -2,7 +2,7 @@
  * File: UART2.c
  * Author: Cheyenne Goh, Faisal Hossain, Andrine Buiza
  *
- * Submitted on December 8, 2021
+ * Submitted on December 10, 2021
  */
 
 #include "xc.h"

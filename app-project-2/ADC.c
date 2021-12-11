@@ -2,7 +2,7 @@
  * File: ADC.c
  * Author: Cheyenne Goh, Faisal Hossain, Andrine Buiza
  *
- * Submitted on December 8, 2021
+ * Submitted on December 10, 2021
  */
 
 #include "xc.h"
@@ -16,7 +16,7 @@ void ADCinit(int i) {
         AD1CON1bits.SSRC = 0b111; // Start ADC conversion time set by SAMC has passed
         AD1CON1bits.ASAM = 0; // Next sampling begins when SAMP bit is set
         AD1CON1bits.SAMP = 0; // Set this bit in ADC routine to start sampling
-        AD1CON1bits.DONE = 1;
+        AD1CON1bits.DONE = 1; // Sets DONE to 0
 
         AD1CON2bits.VCFG = 0b000; // Vref+=AVDD, Vref=+AVSS
         AD1CON2bits.CSCNA = 0; // Do not scan inputs; use channel selected by CH0SA bits
@@ -35,21 +35,14 @@ void ADCinit(int i) {
 
         // IO port selection
         TRISBbits.TRISB13 = 1; // Set pin8/RA3/AN5 as input
+        TRISAbits.TRISA3 = 0; // Clear RB1 as input
+        TRISBbits.TRISB1 = 0; // Clear RB1 as input
+        
         AD1PCFG = 0xFFFF; // Set all bits as digital
-    //    AD1PCFGbits.PCFG5 = 0; // Set only pin8/AN5/RA3 as analog input for ADC
-    //    if(i == 11){
-    //        AD1PCFGbits.PCFG5 = 1; // Set only pin8/AN5/RA3 as analog input for ADC
-    //        AD1PCFGbits.PCFG11 = 0; // Set only pin8/AN5/RA3 as analog input for ADC
-    //    }
-    //    if(i == 5){
-    //        AD1PCFGbits.PCFG11 = 1; // Set only pin8/AN5/RA3 as analog input for ADC
-    //        AD1PCFGbits.PCFG5 = 0; // Set only pin8/AN5/RA3 as analog input for ADC
-    //    }
-        AD1PCFGbits.PCFG11 = 0;
-//        AD1CSSL = 0; // Input scan disabled, 0x0000 is default state
-
-//        IPC3bits.AD1IP = 7; // INT bit setup
-
+        AD1PCFGbits.PCFG11 = 0; // Sets bit to analog
+        
+        AD1CSSL = 0; // Input scan disabled, 0x0000 is default state
+        IPC3bits.AD1IP = 7; // INT bit setup
         AD1CON1bits.ADON = 1; // Turn on ADC module
     }
     else{
@@ -59,7 +52,7 @@ void ADCinit(int i) {
         AD1CON1bits.SSRC = 0b111; // Start ADC conversion time set by SAMC has passed
         AD1CON1bits.ASAM = 0; // Next sampling begins when SAMP bit is set
         AD1CON1bits.SAMP = 0; // Set this bit in ADC routine to start sampling
-        AD1CON1bits.DONE = 1;
+        AD1CON1bits.DONE = 1; // Sets DONE to 1
 
         AD1CON2bits.VCFG = 0b000; // Vref+=AVDD, Vref=+AVSS
         AD1CON2bits.CSCNA = 0; // Do not scan inputs; use channel selected by CH0SA bits
@@ -78,24 +71,18 @@ void ADCinit(int i) {
 
         // IO port selection
         TRISAbits.TRISA3 = 1; // Set pin8/RA3/AN5 as input
+        TRISBbits.TRISB1 = 0; // Clear RB1 as input
+        TRISBbits.TRISB13 = 0; // Clear RA3 as input
+        
         AD1PCFG = 0xFFFF; // Set all bits as digital
-    //    AD1PCFGbits.PCFG5 = 0; // Set only pin8/AN5/RA3 as analog input for ADC
-    //    if(i == 11){
-    //        AD1PCFGbits.PCFG5 = 1; // Set only pin8/AN5/RA3 as analog input for ADC
-    //        AD1PCFGbits.PCFG11 = 0; // Set only pin8/AN5/RA3 as analog input for ADC
-    //    }
-    //    if(i == 5){
-    //        AD1PCFGbits.PCFG11 = 1; // Set only pin8/AN5/RA3 as analog input for ADC
-    //        AD1PCFGbits.PCFG5 = 0; // Set only pin8/AN5/RA3 as analog input for ADC
-    //    }
-        AD1PCFGbits.PCFG5 = 0;
+        AD1PCFGbits.PCFG5 = 0; // Sets bit to analog
+        
         AD1CSSL = 0; // Input scan disabled, 0x0000 is default state
-
         IPC3bits.AD1IP = 7; // INT bit setup
-
         AD1CON1bits.ADON = 1; // Turn on ADC module
     }
-    
+    CTMUCON = 0x0000;
+    CTMUICON = 0x0000;
 }
 
 uint16_t do_ADC(void) {

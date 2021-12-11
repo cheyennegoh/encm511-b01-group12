@@ -2,7 +2,7 @@
  * File: clocks.h
  * Author: Cheyenne Goh, Faisal Hossain, Andrine Buiza
  *
- * Submitted on December 8, 2021
+ * Submitted on December 10, 2021
  */
 
 #ifndef CLOCKS_H

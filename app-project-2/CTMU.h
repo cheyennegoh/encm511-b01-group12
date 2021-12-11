@@ -2,7 +2,7 @@
  * File: CTMU.h
  * Author: Cheyenne Goh, Faisal Hossain, Andrine Buiza
  *
- * Submitted on December 8, 2021
+ * Submitted on December 10, 2021
  */
 
 #ifndef CTMU_H
@@ -19,11 +19,10 @@ extern "C" {
 }
 #endif
 
-void setup(void);
-// PROMISES: initializes ADC
+int doCTMU(void);
+// PROMISES: reads ADC to perform CTMU
 
-float doCTMU();
-// PROMISES: unsigned 16-bit integer value from 0 to 1023 from analog-to-digital
-// conversion
+void setupCTMU(void);
+// PROMISES: sets up registers for CTMU
 
 #endif	/* CTMU_H */
